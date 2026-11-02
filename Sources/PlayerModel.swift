@@ -79,6 +79,20 @@ final class PlayerModel: ObservableObject {
         isPlaying = true
     }
 
+    /// 清空当前视频，回到初始状态
+    func reset() {
+        player.pause()
+        player.replaceCurrentItem(with: nil)
+        isPlaying = false
+        hasVideo = false
+        currentTime = 0
+        duration = 0
+        danmaku = []
+        videoName = ""
+        statusText = ""
+        currentTimeText = "00:00"
+    }
+
     func pause() {
         player.pause()
         isPlaying = false
