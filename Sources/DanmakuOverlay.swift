@@ -1,3 +1,4 @@
+import AVFoundation
 import SwiftUI
 
 /// 弹幕浮层：按播放时间把弹幕画在画面上
@@ -34,16 +35,15 @@ struct DanmakuOverlay: View {
                     let estimatedWidth = CGFloat(item.text.count) * settings.fontSize * 0.98
 
                     if item.mode == 5 && settings.showTop {
-                        // 顶部固定 4 秒
                         let visible = elapsed < 4
                         guard visible else { continue }
                         let lane = index % min(maxLanes, 3)
                         ctx.opacity = settings.opacity * (elapsed > 3 ? (4 - elapsed) : 1)
-                        ctx.draw(text, at: CGPoint(x: size.width / 2, y: lineHeight * CGFloat(lane + 1) - lineHeight / 2),
+                        ctx.draw(text,
+                                 at: CGPoint(x: size.width / 2, y: lineHeight * CGFloat(lane + 1) - lineHeight / 2),
                                  anchor: .center)
                         ctx.opacity = 1
                     } else if item.mode == 4 {
-                        // 底部固定 4 秒
                         let visible = elapsed < 4
                         guard visible else { continue }
                         let lane = index % 2
@@ -75,7 +75,6 @@ struct DanmakuOverlay: View {
         return Color(red: r, green: g, blue: b)
     }
 
-    /// 找第一个 time >= target 的下标
     private func lowerBound(_ target: TimeInterval) -> Int {
         var lo = 0, hi = items.count
         while lo < hi {
