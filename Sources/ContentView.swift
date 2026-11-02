@@ -83,10 +83,7 @@ struct ContentView: View {
     private var topBar: some View {
         HStack(spacing: 10) {
             Button {
-                model.pause()
-                model.player.replaceCurrentItem(with: nil)
-                model.hasVideo = false
-                model.currentTime = 0
+                model.reset()
             } label: {
                 Image(systemName: "chevron.left")
                     .font(.body.weight(.semibold))
