@@ -4,6 +4,11 @@ on:
   workflow_dispatch:
   push:
     branches: [ main ]
+  schedule:
+    - cron: '0 20 * * *'   # 每天北京时间 04:00 自动重编一次
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -39,9 +44,22 @@ jobs:
           zip -qry DanmakuIOS.ipa Payload
           ls -lh DanmakuIOS.ipa
 
-      - name: Upload IPA
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: DanmakuIOS-ipa
           path: DanmakuIOS.ipa
           retention-days: 30
+
+      - name: Publish to latest release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: latest build
+          body: |
+            自动构建的未签名 ipa
+            用法：签名工具（LCSign / AltStore / Sideloadly）里加源即可
+          files: DanmakuIOS.ipa
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
